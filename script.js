@@ -1,15 +1,56 @@
-function sound(src) {
-  this.sound = document.createElement("audio");
-  this.sound.src = src;
-  this.sound.setAttribute("preload", "auto");
-  this.sound.setAttribute("controls", "none");
-  this.sound.style.display = "none";
-  document.body.appendChild(this.sound);
-  this.play = function(){
-    this.sound.play();
+let firstPlayerScore = Number(localStorage.getItem('firstPlayerScore')) || 0;
+let secondPlayerScore = Number(localStorage.getItem('secondPlayerScore')) || 0;
+
+// Update the score display when the page loads
+window.onload = function() {
+  document.getElementById('firstPlayerScore').textContent = firstPlayerScore;
+  document.getElementById('secondPlayerScore').textContent = secondPlayerScore;
+};
+
+function updateScore(player) {
+  if (player === 'firstPlayer') {
+    firstPlayerScore++;
+    localStorage.setItem('firstPlayerScore', firstPlayerScore);
+    document.getElementById('firstPlayerScore').textContent = firstPlayerScore;
+  } else if (player === 'secondPlayer') {
+    secondPlayerScore++;
+    localStorage.setItem('secondPlayerScore', secondPlayerScore);
+    document.getElementById('secondPlayerScore').textContent = secondPlayerScore;
   }
-  this.stop = function(){
-    this.sound.pause();
+}
+
+/************************************************************/
+
+function updateScore() {
+  if (check(firstPlayer)) {
+    firstPlayerScore++;
+  } else if (check(secondPlayer)) {
+    secondPlayerScore++;
+  }
+}
+
+// Call updateScore after each move
+// updateScore();
+
+/************************************************************/
+
+function updateScore(player) {
+  if (player === 'firstPlayer') {
+    firstPlayerScore++;
+    document.getElementById('firstPlayerScore').textContent = firstPlayerScore;
+  } else if (player === 'secondPlayer') {
+    secondPlayerScore++;
+    document.getElementById('secondPlayerScore').textContent = secondPlayerScore;
+  }
+}
+
+// Call updateScore in your winnerpleyr function
+function winnerpleyr(p){
+  // rest of your code
+  if (p === "Congrats player one you win") {
+    updateScore('firstPlayer');
+  } else {
+    updateScore('secondPlayer');
   }
 }
 /************************************************************/
@@ -36,10 +77,16 @@ function winnerpleyr(p){
   modal.classList.add("winner");
   modal.appendChild(player);
   replay.appendChild(document.createTextNode("Replay"));
-  // replay.setAttribute("onclick","rep();");
   replay.onclick = function() { rep() };
   modal.appendChild(replay);
   document.body.appendChild(modal);
+
+  // Update score
+  if (p.includes("player one")) {
+    updateScore('firstPlayer');
+  } else if (p.includes("player two")) {
+    updateScore('secondPlayer');
+  }
 }
 /*******************************************************/
 function draw(){
@@ -65,11 +112,17 @@ function draw(){
 }
 function rep(){
   const w = document.querySelector(".winner");
-  // cards.forEach(card => card.classList = "card");
   firstPlayer = [];
   secondPlayer = [];
   count = 0;
-  w.remove()
-  location.reload()
+  w.remove();
+
+  // Remove X's and O's from the game board
+  cards.forEach(card => card.classList = "card");
+
+  // Update the score display without resetting the scores
+  document.getElementById('firstPlayerScore').textContent = firstPlayerScore;
+  document.getElementById('secondPlayerScore').textContent = secondPlayerScore;
 }
+
 cards.forEach(card => card.addEventListener("click", draw)); 
