@@ -126,3 +126,8 @@ function rep(){
 }
 
 cards.forEach(card => card.addEventListener("click", draw)); 
+/*******************************************************/
+
+document.getElementById('darkModeSwitch').addEventListener('change', function() {
+  document.body.classList.toggle('dark-mode', this.checked);
+});
